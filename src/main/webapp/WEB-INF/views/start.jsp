@@ -9,7 +9,7 @@
             <div class="carousel-item active">
                 <div class="container w-75 d-flex">
                     <div class="carousel-caption d-block">
-                        <h1 class="pb-3">This is a game board. It is 3x3</h1>
+                        <h2 class="pb-3">Step no.1 of instruction: This is a game board. It is 3x3</h2>
                         <img src="<c:url value="/css/images/ttt.jpg"/>" alt="" width="600" height="400">
                     </div>
                 </div>
@@ -17,14 +17,88 @@
             <div class="carousel-item">
                 <div class="container w-75 d-flex">
                     <div class="carousel-caption d-block">
-                        <img src="<c:url value="/css/images/ttt.jpg"/>" alt="" width="600" height="400">
+                        <h2 class="pb-3">Step no.2: The first move belongs to X</h2>
+                        <img src="<c:url value="/css/images/ttt1.jpg"/>" alt="" width="600" height="400">
                     </div>
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="container w-75 d-flex">
                     <div class="carousel-caption d-block">
-                        <img src="<c:url value="/css/images/ttt.jpg"/>" alt="" width="600" height="400">
+                        <h2 class="pb-3">Step no.2: The second move belongs to O</h2>
+                        <img src="<c:url value="/css/images/ttt2.jpg"/>" alt="" width="600" height="400">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container w-75 d-flex">
+                    <div class="carousel-caption d-block">
+                        <h2 class="pb-3">Step no.3: Until both players make 3 moves...</h2>
+                        <img src="<c:url value="/css/images/ttt3.jpg"/>" alt="" width="600" height="400">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container w-75 d-flex">
+                    <div class="carousel-caption d-block">
+                        <h2 class="pb-3">Step no.4: ...The game is on</h2>
+                        <img src="<c:url value="/css/images/ttt4.jpg"/>" alt="" width="600" height="400">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container w-75 d-flex">
+                    <div class="carousel-caption d-block">
+                        <h2 class="pb-3">Step no.5: The exception is when 3 identical characters will be...</h2>
+                        <img src="<c:url value="/css/images/ttt5.jpg"/>" alt="" width="600" height="400">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container w-75 d-flex">
+                    <div class="carousel-caption d-block">
+                        <h2 class="pb-3">Step no.6: ...in one line: vertical/horizontal/diagonal</h2>
+                        <img src="<c:url value="/css/images/ttt6.jpg"/>" alt="" width="600" height="400">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container w-75 d-flex">
+                    <div class="carousel-caption d-block">
+                        <h2 class="pb-3">Step no.7: If both players make 3 moves and no one has won yet, the rules change</h2>
+                        <img src="<c:url value="/css/images/ttt6.jpg"/>" alt="" width="600" height="400">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container w-75 d-flex">
+                    <div class="carousel-caption d-block">
+                        <h2 class="pb-3">Step no.8: From now you can move previously placed marks, but only vertical/horizontal!</h2>
+                        <img src="<c:url value="/css/images/ttt7.jpg"/>" alt="" width="600" height="400">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container w-75 d-flex">
+                    <div class="carousel-caption d-block">
+                        <h2 class="pb-3">Step no.9: So X can do this:</h2>
+                        <img src="<c:url value="/css/images/ttt8.jpg"/>" alt="" width="600" height="400">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container w-75 d-flex">
+                    <div class="carousel-caption d-block">
+                        <h2 class="pb-3">Finally step no.10: and get a point for Win!</h2>
+                        <img src="<c:url value="/css/images/ttt9.jpg"/>" alt="" width="600" height="400">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container w-75 d-flex">
+                    <div class="carousel-caption d-block">
+                        <h2 class="pb-3">Sign up and enjoy! :D</h2>
+                        <img src="<c:url value="/css/images/me.jpg"/>" alt="" width="600" height="400">
                     </div>
                 </div>
             </div>
