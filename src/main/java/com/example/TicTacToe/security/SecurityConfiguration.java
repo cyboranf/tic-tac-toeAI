@@ -31,7 +31,7 @@ public class SecurityConfiguration {
                 .and().formLogin()
                 .loginPage("/login")
                 .failureUrl("/login?error=true")
-                .defaultSuccessUrl("/login/redirect")
+                .defaultSuccessUrl("/app/game")
                 .usernameParameter("userName")
                 .passwordParameter("password")
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
