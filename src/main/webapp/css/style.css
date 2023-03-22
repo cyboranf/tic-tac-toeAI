@@ -104,6 +104,7 @@ hr {
 
 .text-color-darker {
     color: var(--background-color);
+    align-items: center;
 }
 
 .text-color-lighter {
