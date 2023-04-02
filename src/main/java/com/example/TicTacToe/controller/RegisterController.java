@@ -1,7 +1,9 @@
 package com.example.TicTacToe.controller;
 
+import com.example.TicTacToe.domain.LoggedUser;
 import com.example.TicTacToe.domain.User;
 import com.example.TicTacToe.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,5 +54,14 @@ public class RegisterController {
         model.addAttribute("registered", "true");
 
         return "register";
+    }
+
+    @GetMapping("/login/redirect")
+    public String redirect(@AuthenticationPrincipal LoggedUser loggedUser) {
+        User user = loggedUser.getUser();
+        User userToLog = userService.findUserByName(user.getUserName());
+        userToLog.setLogged(true);
+        userService.save(userToLog);
+        return "redirect:/app/game";
     }
 }

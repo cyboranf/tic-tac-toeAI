@@ -25,7 +25,7 @@ public class SecurityConfiguration {
                 .antMatchers("/login", "/login/register").permitAll()
                 .antMatchers("/logout/*").hasAuthority("USER")
                 .antMatchers("/login/redirect").authenticated()
-                .antMatchers("/app/game").hasAuthority("USER")
+                .antMatchers("/app/game").permitAll()
                 .antMatchers("/app/results").hasAuthority("USER")
                 .anyRequest().denyAll()
                 .and().formLogin()
