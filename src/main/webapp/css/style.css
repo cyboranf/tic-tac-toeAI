@@ -300,24 +300,12 @@ hr {
     color: grey !important;
 }
 
-/*------------------------------*/
-/*---- Recipes section ----*/
-/*------------------------------*/
-
-.icon-users {
-    font-size: 3rem;
-    padding: 0 5px 0 20px;
-    color: var(--link-color);
+.dashboard-section .nav-item {
+    display: block;
+    width: 260px;
+    margin-bottom: 20px;
 }
 
-.orange-line {
-    height: .5rem;
-    background: var(--link-color);
-}
-
-.recipes-section {
-    background: var(--light-link-color);
-}
 
 
 /*------------------------------*/
@@ -362,11 +350,7 @@ hr {
     border-left: 5px solid var(--link-color);
 }
 
-.dashboard-section .nav-item a.active i.fa-angle-right,
-.dashboard-section .nav-item:hover i.fa-angle-right {
-    display: block;
-    color: pink !important;
-}
+
 
 .circle-div {
     border: 3px solid var(--link-color);
@@ -374,18 +358,5 @@ hr {
     height: 39px;
     width: 45px;
     padding-top: 1px;
-}
-
-.icon-user {
-    font-size: 2rem;
-    color: purple;
-}
-
-.icon-circle {
-    font-size: 2rem;
-}
-
-.icon-calendar {
-    font-size: 2rem;
 }
 
