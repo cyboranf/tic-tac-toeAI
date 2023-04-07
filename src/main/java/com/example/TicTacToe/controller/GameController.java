@@ -23,7 +23,24 @@ public class GameController {
     public String showGame(@AuthenticationPrincipal LoggedUser loggedUser,
                            Model model) {
         User user = userService.findByLogged();
+        model.addAttribute("username", user.getUserName());
 
-        return "game";
+        return "gameE";
+    }
+    @GetMapping("/app/medium")
+    public String showGameMediumLevel(@AuthenticationPrincipal LoggedUser loggedUser,
+                           Model model) {
+        User user = userService.findByLogged();
+        model.addAttribute("username", user.getUserName());
+
+        return "gameM";
+    }
+    @GetMapping("/app/hard")
+    public String showGameHardLevel(@AuthenticationPrincipal LoggedUser loggedUser,
+                           Model model) {
+        User user = userService.findByLogged();
+        model.addAttribute("username", user.getUserName());
+
+        return "gameH";
     }
 }

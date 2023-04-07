@@ -37,15 +37,18 @@
 </script>
 
 
-
 <section class="dashboard-section">
     <div class="container pt-4 pb-4">
         <div class="border-dashed view-height">
             <div class="box-wrapper">
                 <div>
-                    <button style="width: 118px" type="submit" >Game's history</button>
-                    <button style="width: 118px" type="button" >Your points: </button>
-                    <button style="width: 116px" type="button" >AI points:</button>
+                    <button style="width: 118px" type="submit">Game's history</button>
+                    <a href="/app/game">
+                        <button style="width: 118px" type="button">Easy level</button>
+                    </a>
+                    <a href="/app/medium">
+                        <button style="width: 118px" type="button">Medium level</button>
+                    </a>
                 </div>
                 <div class="row">
                     <div class="box box00" data-x="0" data-y="0"></div>
@@ -74,7 +77,11 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var user = "X", computer = "O";
-        var box = "${board}"
+        box = [
+            [1, 1, 1],
+            [1, 1, 1],
+            [1, 1, 1]
+        ]
 
         $('.box').click(function () {
             runUser($(this), function () {
@@ -83,6 +90,7 @@
                     runComputer();
                 } else {
                     $('.position').append('<p>Game End</p>');
+                    nobodyWon();
                 }
 
             });
@@ -139,52 +147,57 @@
         }
 
         function checkIfWins() {
-            var win;
+            let x=0;
             if (box[0][0] == "X" && box[0][1] == "X" && box[0][2] == "X") {
-                win = "X";
+                x=1;
+                userWon();
             } else if (box[1][0] == "X" && box[1][1] == "X" && box[1][2] == "X") {
-                win = "X";
+                x=1;
+                userWon();
             } else if (box[2][0] == "X" && box[2][1] == "X" && box[2][2] == "X") {
-                win = "X";
+                x=1;
+                userWon()
             } else if (box[0][0] == "X" && box[1][0] == "X" && box[2][0] == "X") {
-                win = "X";
+                x=1;
+                userWon()
             } else if (box[0][1] == "X" && box[1][1] == "X" && box[2][1] == "X") {
-                win = "X";
+                x=1;
+                userWon()
             } else if (box[0][2] == "X" && box[1][2] == "X" && box[2][2] == "X") {
-                win = "X";
+                x=1;
+                userWon()
             } else if (box[0][0] == "X" && box[1][1] == "X" && box[2][2] == "X") {
-                win = "X";
-            } else if (box[0][2] == "X" && box[1][2] == "X" && box[2][0] == "X") {
-                win = "X";
+                x=1;
+                userWon()
+            } else if (box[0][2] == "X" && box[1][1] == "X" && box[2][0] == "X") {
+                x=1;
+                userWon()
             }
 
             if (box[0][0] == "O" && box[0][1] == "O" && box[0][2] == "O") {
-                win = "O";
+                x=1;
+                aiWon()
             } else if (box[1][0] == "O" && box[1][1] == "O" && box[1][2] == "O") {
-                win = "O";
+                x=1;
+                aiWon()
             } else if (box[2][0] == "O" && box[2][1] == "O" && box[2][2] == "O") {
-                win = "O";
+                x=1;
+                aiWon()
             } else if (box[0][0] == "O" && box[1][0] == "O" && box[2][0] == "O") {
-                win = "O";
+                x=1;
+                aiWon()
             } else if (box[0][1] == "O" && box[1][1] == "O" && box[2][1] == "O") {
-                win = "O";
+                x=1;
+                aiWon()
             } else if (box[0][2] == "O" && box[1][2] == "O" && box[2][2] == "O") {
-                win = "O";
+                x=1;
+                aiWon()
             } else if (box[0][0] == "O" && box[1][1] == "O" && box[2][2] == "O") {
-                win = "O";
-            } else if (box[0][2] == "O" && box[1][2] == "O" && box[2][0] == "O") {
-                win = "O";
-            }
-
-            if (win == "O") {
-                alert("Computers Win");
-                throw new Error("");
-            } else if (win == "X") {
-                alert("You Win");
-                throw new Error("");
-                return false;
-            } else {
-                return true;
+                x=1;
+                aiWon()
+            } else if (box[0][2] == "O" && box[1][1] == "O" && box[2][0] == "O") {
+                x=1;
+                aiWon()
             }
 
         }
@@ -195,6 +208,7 @@
         max = 3;
         return Math.floor(Math.random() * (max - min) + min);
     }
+
     var x = document.getElementById("myAudio");
     var sliderLevel = document.querySelector('#volume-slider')
     x.volume = sliderLevel.value / 100
@@ -202,7 +216,29 @@
         x.volume = e.currentTarget.value / 100;
     })
 
+    function userWon() {
+        if (confirm("${username} is a winner") == true) {
+            window.location.href = "/app/hard";
+        } else {
+            window.location.href = "/app/hard"
+        }
+    }
 
+    function aiWon() {
+        if (confirm("AI is a winner") == true) {
+            window.location.href = "/app/hard";
+        } else {
+            window.location.href = "/app/hard"
+        }
+    }
+
+    function nobodyWon() {
+        if (confirm("Nobody won") == true) {
+            window.location.href = "/app/game";
+        } else {
+            window.location.href = "/app/game"
+        }
+    }
 </script>
 
 </body>
