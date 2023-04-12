@@ -78,68 +78,142 @@
     $(document).ready(function () {
         var user = "X", computer = "O";
         box = [
-            [1, 1, 1],
-            [1, 1, 1],
-            [1, 1, 1]
-        ]
+            ['-', '-', '-'],
+            ['-', '-', '-'],
+            ['-', '-', '-']
+        ];
 
-        $('.box').click(function () {
-            runUser($(this), function () {
-                // check if game ends
-                if (!isGameEnd()) {
-                    runAI(computer, user);
-                } else {
-                    $('.position').append('<p>Game End</p>');
-                    nobodyWon();
-                }
-
-            });
-        });
-
-        // checking if the game ends
-        function isGameEnd() {
-            count = 0;
-            for (i = 0; i < 3; i++) {
-                for (j = 0; j < 3; j++) {
-                    if (box[i][j] == "1") {
-                        count++;
+        function isBoardFull(board) {
+            let isFull = true;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (board[i][j] === '-') {
+                        isFull = false;
                     }
                 }
             }
-            if (count == 0) {
+            return isFull;
+        }
+
+        function checkWin(board, player) {
+            for (let i = 0; i < 3; i++) {
+                if (board[i][0] === player && board[i][1] === player && board[i][2] === player) {
+                    return true;
+                }
+                if (board[0][i] === player && board[1][i] === player && board[2][i] === player) {
+                    return true;
+                }
+            }
+            if (board[0][0] === player && board[1][1] === player && board[2][2] === player) {
                 return true;
+            }
+            if (board[0][2] === player && board[1][1] === player && board[2][0] === player) {
+                return true;
+            }
+            return false;
+        }
+
+        function gameOver(board, computer, user, checkWin, isBoardFull) {
+            return (checkWin(board, user) || checkWin(board, computer) || isBoardFull(board));
+        }
+
+        function scoreValue(board, computer, user) {
+            let score = 0;
+
+            // Check rows
+            for (let i = 0; i < board.length; i++) {
+                if (board[i][0] === board[i][1] && board[i][1] === board[i][2]) {
+                    if (board[i][0] === computer) {
+                        score = score + 10;
+                        break;
+                    } else {
+                        score = score - 10;
+                        break;
+                    }
+                }
+            }
+
+            // Check columns
+            for (let i = 0; i < board.length; i++) {
+                if (board[0][i] === board[1][i] && board[1][i] === board[2][i]) {
+                    if (board[0][i] === computer) {
+                        score = score + 10;
+                        break;
+                    } else if (board[0][i] === user) {
+                        score = score - 10;
+                        break;
+                    }
+                }
+            }
+
+            // Check diagonals
+            if (board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
+                if (board[0][0] === computer) {
+                    score = score + 10;
+                } else {
+                    score = score - 10;
+                }
+            }
+
+            if (board[0][2] === board[1][1] && board[1][1] === board[2][0]) {
+                if (board[0][2] === computer) {
+                    score = score + 10;
+                } else {
+                    score = score - 10;
+                }
+            }
+
+            return score;
+        }
+
+        function minmax(isMaximizing, board, computer, user, scoreValue) {
+            const result = scoreValue(board, computer, user);
+            if (result !== 0) {
+                return result;
+            }
+            if (isBoardFull(board)) {
+                return 0;
+            }
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < board.length; i++) {
+                    for (let j = 0; j < board.length; j++) {
+                        if (board[i][j] === '-') {
+                            board[i][j] = computer;
+                            let score = minmax(false, board, computer, user, scoreValue);
+                            bestScore = Math.max(score, bestScore);
+                            board[i][j] = '-';
+                        }
+                    }
+                }
+                return bestScore;
             } else {
-                return false;
+                let bestScore = Infinity;
+                for (let i = 0; i < board.length; i++) {
+                    for (let j = 0; j < board.length; j++) {
+                        if (board[i][j] === '-') {
+                            board[i][j] = user;
+                            let score = minmax(true, board, computer, user, scoreValue);
+                            bestScore = Math.min(score, bestScore);
+                            board[i][j] = '-';
+                        }
+                    }
+                }
+                return bestScore;
             }
         }
 
-        function runUser($user, callback) {
-            x = parseInt($user.data('x'));
-            y = parseInt($user.data('y'));
-            if ("1" == box[x][y]) {
-                box[x][y] = user;
-
-                className = "box" + x + y;
-                $('.' + className).html(user);
-                $('.position').append('<p class="communicat">${username} clicked :' + x + ',' + y + '</p>');
-                checkIfWins();
-                callback();
-            } else {
-                alert("This is already used");
-            }
-        }
-
-        function runAI(computer, user) {
-            bestScore = Number.MIN_VALUE;
+        function bestMove(board, computer, user, minmax, isBoardFull, gameOver) {
+            let bestScore = -Infinity;
             let row = -1;
             let col = -1;
-            for (let i = 0; i < box.length; i++) {
-                for (let j = 0; j < box.length; j++) {
-                    // sprawdza czy pole jest wolne
-                    if (box[i][j] == 1) {
-                        box[i][j] = computer;
-                        let score = minmax(false, box, computer, user);
-                        box[i][j] = 1;
+            for (let i = 0; i < board.length; i++) {
+                for (let j = 0; j < board.length; j++) {
+                    if (board[i][j] === '-') {
+                        board[i][j] = computer;
+                        let score = minmax(false, board, computer, user, scoreValue);
+                        board[i][j] = '-';
                         if (score > bestScore) {
                             bestScore = score;
                             row = i;
@@ -148,212 +222,76 @@
                     }
                 }
             }
-
-
-                console.log("Jestem w runAI i mam stawiać znaczek")
-                box[row][col] = computer;
-
+            if (!isBoardFull(board) && !gameOver(board, computer, user, checkWin, isBoardFull)) {
+                board[row][col] = computer;
                 className = "box" + row + col;
                 $('.' + className).html(computer);
-                $('.position').append('<p>AI clicked :' + row + ',' + col + '</p>');
-                checkIfWins();
-
-
+                $('.position').append('<p class="communicat">AI clicked :' + row + ',' + col + '</p>');
+            }
         }
 
-        function checkIfWins() {
-            let x = 0;
-            if (box[0][0] == "X" && box[0][1] == "X" && box[0][2] == "X") {
-                x = 1;
-                userWon();
-            } else if (box[1][0] == "X" && box[1][1] == "X" && box[1][2] == "X") {
-                x = 1;
-                userWon();
-            } else if (box[2][0] == "X" && box[2][1] == "X" && box[2][2] == "X") {
-                x = 1;
-                userWon()
-            } else if (box[0][0] == "X" && box[1][0] == "X" && box[2][0] == "X") {
-                x = 1;
-                userWon()
-            } else if (box[0][1] == "X" && box[1][1] == "X" && box[2][1] == "X") {
-                x = 1;
-                userWon()
-            } else if (box[0][2] == "X" && box[1][2] == "X" && box[2][2] == "X") {
-                x = 1;
-                userWon()
-            } else if (box[0][0] == "X" && box[1][1] == "X" && box[2][2] == "X") {
-                x = 1;
-                userWon()
-            } else if (box[0][2] == "X" && box[1][1] == "X" && box[2][0] == "X") {
-                x = 1;
-                userWon()
-            }
+        $('.box').click(function () {
+            runUser($(this), function () {
+                if (checkWin(box, user)) {
+                    userWon();
+                } else if (!gameOver(box, computer, user, checkWin, isBoardFull)) {
+                    bestMove(box, computer, user, minmax, isBoardFull, gameOver);
+                    if (checkWin(box, computer)) {
+                        computerWon();
+                    }
+                } else {
+                    $('.position').append('<p>Game End</p>');
+                    nobodyWon();
+                }
+            });
+        });
 
-            if (box[0][0] == "O" && box[0][1] == "O" && box[0][2] == "O") {
-                x = 1;
-                aiWon()
-            } else if (box[1][0] == "O" && box[1][1] == "O" && box[1][2] == "O") {
-                x = 1;
-                aiWon()
-            } else if (box[2][0] == "O" && box[2][1] == "O" && box[2][2] == "O") {
-                x = 1;
-                aiWon()
-            } else if (box[0][0] == "O" && box[1][0] == "O" && box[2][0] == "O") {
-                x = 1;
-                aiWon()
-            } else if (box[0][1] == "O" && box[1][1] == "O" && box[2][1] == "O") {
-                x = 1;
-                aiWon()
-            } else if (box[0][2] == "O" && box[1][2] == "O" && box[2][2] == "O") {
-                x = 1;
-                aiWon()
-            } else if (box[0][0] == "O" && box[1][1] == "O" && box[2][2] == "O") {
-                x = 1;
-                aiWon()
-            } else if (box[0][2] == "O" && box[1][1] == "O" && box[2][0] == "O") {
-                x = 1;
-                aiWon()
-            }
+        function runUser($user, callback) {
+            x = parseInt($user.data('x'));
+            y = parseInt($user.data('y'));
+            if ('-' == box[x][y]) {
+                box[x][y] = user;
 
+                className = "box" + x + y;
+                $('.' + className).html(user);
+                $('.position').append('<p class="communicat">${username} clicked :' + x + ',' + y + '</p>');
+                callback();
+            } else {
+                alert("This is already used");
+            }
+        }
+
+        var x = document.getElementById("myAudio");
+        var sliderLevel = document.querySelector('#volume-slider')
+        x.volume = sliderLevel.value / 100
+        sliderLevel.addEventListener("change", function (e) {
+            x.volume = e.currentTarget.value / 100;
+        })
+
+        function nobodyWon() {
+            if (confirm("Nobody won") == true) {
+                window.location.href = "/app/medium";
+            } else {
+                window.location.href = "/app/medium";
+            }
+        }
+
+        function computerWon() {
+            if (confirm("Computer won") == true) {
+                window.location.href = "/app/medium";
+            } else {
+                window.location.href = "/app/medium";
+            }
+        }
+
+        function userWon() {
+            if (confirm("User won") == true) {
+                window.location.href = "/app/medium";
+            } else {
+                window.location.href = "/app/medium";
+            }
         }
     });
-
-    function scoreValue(computer,user) {
-        let score = 0;
-
-        // sprawdza rzędy
-        for (let i = 0; i < box.length; i++) {
-            if (box[i][0] === box[i][1] && box[i][1] === box[i][2]) {
-                if (box[i][0] == computer) {
-                    score = score - 10;
-                    break;
-                } else if (box[i][0] == user) {
-                    score = score + 10;
-                    break;
-                }
-            }
-        }
-
-        // sprwdza kolumny
-        for (let i = 0; i < box.length; i++) {
-            if (box[0][i] === box[1][i] && box[1][i] === box[2][i]) {
-                if (box[0][i] === computer) {
-                    score = score - 10;
-                    break;
-                } else if (box[0][i] === user) {
-                    score = score + 10;
-                    break;
-                }
-            }
-        }
-
-        // sprawdza przekątne
-        if (box[0][0] === box[1][1] && box[1][1] === box[2][2]) {
-            if (box[0][0] === computer) {
-                score = score - 10;
-            } else if (box[0][0] === user) {
-                score = score + 10;
-            }
-        }
-
-        if (box[0][2] === box[1][1] && box[1][1] === box[2][0]) {
-            if (box[0][2] === computer) {
-                score = score - 10;
-            } else if (box[0][2] === user) {
-                score = score + 10;
-            }
-        }
-
-        return score;
-    }
-
-    function isBoardFull() {
-        let isFull = true;
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                if (box[i][j] == 1) {
-                    isFull = false;
-                }
-            }
-        }
-        return isFull;
-    }
-
-    function minmax(isMaximizing, box, computer, user) {
-        let result = scoreValue(computer,user);
-        // zwraca wynik sytuacji na planszy
-        if (result !== 0) {
-            return result;
-        }
-        if (isBoardFull()) {
-            return 0;
-        }
-
-        // jeżeli komputer maksyamlizuje wynik
-        if (isMaximizing) {
-            let bestScore = -Infinity;
-            for (let i = 0; i < box.length; i++) {
-                for (let j = 0; j < box.length; j++) {
-                    // sprawdza czy pole jest wolne
-                    if (box[i][j] === 1) {
-                        box[i][j] = computer;
-                        let score = minmax(false, box,computer,user);
-                        bestScore = Math.max(score, bestScore);
-                        box[i][j] = 1;
-                    }
-                }
-                console.log("Jestem w max")
-            }
-            return bestScore;
-        } else {
-            console.log("Jestem w min")
-            let bestScore = Infinity;
-            for (let i = 0; i < box.length; i++) {
-                for (let j = 0; j < box.length; j++) {
-                    // sprawdza czy pole jest wolne
-                    if (box[i][j] === 1) {
-                        box[i][j] = user;
-                        let score = minmax(true, box, computer, user);
-                        bestScore = Math.min(score, bestScore);
-                        box[i][j] = 1;
-                    }
-                }
-            }
-            return bestScore;
-        }
-    }
-
-
-    var x = document.getElementById("myAudio");
-    var sliderLevel = document.querySelector('#volume-slider')
-    x.volume = sliderLevel.value / 100
-    sliderLevel.addEventListener("change", function (e) {
-        x.volume = e.currentTarget.value / 100;
-    })
-
-    function userWon() {
-        if (confirm("${username} is a winner") == true) {
-            window.location.href = "/app/medium";
-        } else {
-            window.location.href = "/app/medium"
-        }
-    }
-
-    function aiWon() {
-        if (confirm("AI is a winner") == true) {
-            window.location.href = "/app/medium";
-        } else {
-            window.location.href = "/app/medium"
-        }
-    }
-
-    function nobodyWon() {
-        if (confirm("Nobody won") == true) {
-            window.location.href = "/app/medium";
-        } else {
-            window.location.href = "/app/medium"
-        }
-    }
 </script>
 
 </body>
