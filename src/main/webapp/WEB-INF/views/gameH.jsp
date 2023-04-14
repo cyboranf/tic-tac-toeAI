@@ -106,12 +106,17 @@
                         $user.html(user);
                         moveCount++;
                         $('.position').append('<p class="communicat">${username} moved from (' + prevX + ',' + prevY + ') to (' + x + ',' + y + ')</p>');
-                        if (!gameOver(box, computer, user, checkWin(box,user), isBoardFull(box))) {
+                        if (!gameOver(box, user, computer, checkWin(box, user), isBoardFull(box))) {
+                            $('.box[data-x="' + x + '"][data-y="' + y + '"]').on('click', function () {
+                                runUserSwap($(this));
+                            });
+                        } else {
+                            checkGameOver(board);
+                        }
+                        setTimeout(function() {
                             bestMoveSwap(box, computer, user);
                             moveCount++;
-                        } else {
-                            checkGameOver(box);
-                        }
+                        }, 2000); // Add a 2-second delay
                     }
                 }
             }
@@ -367,7 +372,9 @@
                 $('.position').append('<p class="communicat">${username} clicked :' + x + ',' + y + '</p>');
 
                 if (!gameOver(box, computer, user)) {
-                    callback();
+                    setTimeout(function() {
+                        callback();
+                    }, 2000); // Add a 2-second delay
                 } else {
                     checkGameOver(box);
                 }
