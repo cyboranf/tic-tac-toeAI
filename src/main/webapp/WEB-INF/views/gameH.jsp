@@ -102,7 +102,7 @@
                     if (box[x][y] === '-') {
                         box[prevX][prevY] = '-';
                         box[x][y] = user;
-                        $('.selected').html('-').removeClass('selected');
+                        $('.selected').html('').removeClass('selected');
                         $user.html(user);
                         moveCount++;
                         $('.position').append('<p class="communicat">${username} moved from (' + prevX + ',' + prevY + ') to (' + x + ',' + y + ')</p>');
@@ -177,7 +177,7 @@
                 board[bestMove.to.x][bestMove.to.y] = computer;
                 let fromClass = "box" + bestMove.from.x + bestMove.from.y;
                 let toClass = "box" + bestMove.to.x + bestMove.to.y;
-                $('.' + fromClass).html('-');
+                $('.' + fromClass).html('');
                 $('.' + toClass).html(computer);
                 $('.position').append('<p class="communicat">AI moved from (' + bestMove.from.x + ',' + bestMove.from.y + ') to (' + bestMove.to.x + ',' + bestMove.to.y + ')</p>');
             }
