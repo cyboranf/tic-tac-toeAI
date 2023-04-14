@@ -44,10 +44,10 @@
                 <div>
                     <button style="width: 118px" type="submit">Game's history</button>
                     <a href="/app/game">
-                        <button style="width: 118px" type="button">Medium level</button>
+                        <button style="width: 118px" type="button">Easy Level</button>
                     </a>
-                    <a href="/app/hard">
-                        <button style="width: 118px" type="button">Hard level</button>
+                    <a href="/app/medium">
+                        <button style="width: 118px" type="button">Medium Level</button>
                     </a>
                 </div>
                 <div class="row">
@@ -77,27 +77,11 @@
     $(document).ready(function () {
         var user = "X", computer = "O";
         var moveCount = 0;
-        box = [
+        var box = [
             ['-', '-', '-'],
             ['-', '-', '-'],
             ['-', '-', '-']
         ];
-
-        $('.box').click(function () {
-            if (moveCount < 6) {
-                runUser($(this), function () {
-                    moveCount++;
-                    if (!gameOver(box, computer, user, checkWin, isBoardFull)) {
-                        bestMove(box, computer, user, minMax, isBoardFull, gameOver);
-                        moveCount++;
-                    } else {
-                        gameEndMessage();
-                    }
-                });
-            } else {
-                runUserSwap($(this));
-            }
-        });
 
         function runUserSwap($user) {
             x = parseInt($user.data('x'));
@@ -121,20 +105,37 @@
                         $('.selected').html('-').removeClass('selected');
                         $user.html(user);
                         moveCount++;
-                        if (!gameOver(box, computer, user, checkWin, isBoardFull)) {
+                        $('.position').append('<p class="communicat">${username} moved from (' + prevX + ',' + prevY + ') to (' + x + ',' + y + ')</p>');
+                        if (!gameOver(box, computer, user, checkWin(box,user), isBoardFull(box))) {
                             bestMoveSwap(box, computer, user);
                             moveCount++;
                         } else {
-                            gameEndMessage();
+                            checkGameOver(box);
                         }
                     }
                 }
             }
         }
 
-        function bestMoveSwap(board, computer, user, minMax, isBoardFull, gameOver) {
-            // where the computer can only swap a piece with an adjacent empty space
 
+        $('.box').click(function () {
+            if (moveCount < 6) {
+                runUser($(this), function () {
+                    moveCount++;
+                    if (!gameOver(box, computer, user)) {
+                        bestMove(box, computer, user, minMax(false, box, computer, user), isBoardFull(box), gameOver(box, computer, user));
+                        moveCount++;
+                    } else {
+                        gameEndMessage();
+                    }
+                });
+            } else {
+                runUserSwap($(this));
+            }
+        });
+
+
+        function bestMoveSwap(board, computer, user) {
             let bestScore = -Infinity;
             let bestMove = {from: {x: -1, y: -1}, to: {x: -1, y: -1}};
             for (let i = 0; i < board.length; i++) {
@@ -154,7 +155,7 @@
                                 let temp = board[i][j];
                                 board[i][j] = '-';
                                 board[x][y] = computer;
-                                let score = minMax(false, board, computer, user, scoreValue);
+                                let score = minMax(false, board, computer, user);
                                 board[x][y] = '-';
                                 board[i][j] = temp;
                                 if (score > bestScore) {
@@ -175,13 +176,15 @@
                 $('.' + toClass).html(computer);
                 $('.position').append('<p class="communicat">AI moved from (' + bestMove.from.x + ',' + bestMove.from.y + ') to (' + bestMove.to.x + ',' + bestMove.to.y + ')</p>');
             }
+
+            // Call checkGameOver function
+            checkGameOver(board);
         }
 
         function gameEndMessage() {
             $('.position').append('<p>Game End</p>');
             nobodyWon();
         }
-
 
 
         function isBoardFull(board) {
@@ -214,9 +217,29 @@
             return false;
         }
 
-        function gameOver(board, computer, user, checkWin, isBoardFull) {
-            return (checkWin(board, user) || checkWin(board, computer) || isBoardFull(board));
+        function gameOver(board, computer, user) {
+            if (checkWin(board, user)) {
+                return user;
+            } else if (checkWin(board, computer)) {
+                return computer;
+            } else if (isBoardFull(board)) {
+                return '-';
+            } else {
+                return null;
+            }
         }
+
+        function checkGameOver(board) {
+            let result = gameOver(board, computer, user);
+            if (result === 'X') {
+                userWon();
+            } else if (result === 'O') {
+                computerWon();
+            } else if (result === '-') {
+                nobodyWon();
+            }
+        }
+
 
         function scoreValue(board, computer, user) {
             let score = 0;
@@ -267,7 +290,7 @@
             return score;
         }
 
-        function minMax(isMaximizing, board, computer, user, scoreValue) {
+        function minMax(isMaximizing, board, computer, user) {
             const result = scoreValue(board, computer, user);
             if (result !== 0) {
                 return result;
@@ -282,7 +305,7 @@
                     for (let j = 0; j < board.length; j++) {
                         if (board[i][j] === '-') {
                             board[i][j] = computer;
-                            let score = minMax(false, board, computer, user, scoreValue);
+                            let score = minMax(false, board, computer, user);
                             bestScore = Math.max(score, bestScore);
                             board[i][j] = '-';
                         }
@@ -295,7 +318,7 @@
                     for (let j = 0; j < board.length; j++) {
                         if (board[i][j] === '-') {
                             board[i][j] = user;
-                            let score = minMax(true, board, computer, user, scoreValue);
+                            let score = minMax(true, board, computer, user);
                             bestScore = Math.min(score, bestScore);
                             board[i][j] = '-';
                         }
@@ -313,7 +336,7 @@
                 for (let j = 0; j < board.length; j++) {
                     if (board[i][j] === '-') {
                         board[i][j] = computer;
-                        let score = minMax(false, board, computer, user, scoreValue);
+                        let score = minMax;
                         board[i][j] = '-';
                         if (score > bestScore) {
                             bestScore = score;
@@ -323,39 +346,15 @@
                     }
                 }
             }
-            if (!isBoardFull(board) && !gameOver(board, computer, user, checkWin, isBoardFull)) {
+            if (!isBoardFull && !gameOver) {
                 board[row][col] = computer;
                 className = "box" + row + col;
                 $('.' + className).html(computer);
                 $('.position').append('<p class="communicat">AI clicked :' + row + ',' + col + '</p>');
+            }else {
+                checkGameOver(box);
             }
         }
-
-        let moveCounter = 0;
-
-        $('.box').click(function () {
-            runUser($(this), function () {
-                moveCounter++;
-                if (checkWin(box, user)) {
-                    userWon();
-                } else if (!gameOver(box, computer, user, checkWin, isBoardFull)) {
-                    if (moveCounter >= 6) {
-                        while (!gameOver(box, computer, user, checkWin, isBoardFull)) {
-                            // Change the rules here after six moves
-                            // Modify the bestMove() or minMax() functions
-                        }
-                    }
-                    bestMove(box, computer, user, minMax, isBoardFull, gameOver);
-                    moveCounter++;
-                    if (checkWin(box, computer)) {
-                        computerWon();
-                    }
-                } else {
-                    $('.position').append('<p>Game End</p>');
-                    nobodyWon();
-                }
-            });
-        });
 
         function runUser($user, callback) {
             x = parseInt($user.data('x'));
@@ -366,7 +365,12 @@
                 className = "box" + x + y;
                 $('.' + className).html(user);
                 $('.position').append('<p class="communicat">${username} clicked :' + x + ',' + y + '</p>');
-                callback();
+
+                if (!gameOver(box, computer, user)) {
+                    callback();
+                } else {
+                    checkGameOver(box);
+                }
             } else {
                 alert("This is already used");
             }
