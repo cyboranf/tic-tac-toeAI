@@ -42,7 +42,9 @@
         <div class="border-dashed view-height">
             <div class="box-wrapper">
                 <div>
-                    <button style="width: 118px" type="submit">Game's history</button>
+                    <a href="/app/table">
+                        <button style="width: 118px" type="submit">Game's history</button>
+                    </a>
                     <a href="/app/game">
                         <button style="width: 118px" type="button">Easy Level</button>
                     </a>
@@ -106,13 +108,17 @@
                         $user.html(user);
                         moveCount++;
                         $('.position').append('<p class="communicat">${username} moved from (' + prevX + ',' + prevY + ') to (' + x + ',' + y + ')</p>');
+
                         if (!gameOver(box, user, computer, checkWin(box, user), isBoardFull(box))) {
                             $('.box[data-x="' + x + '"][data-y="' + y + '"]').on('click', function () {
                                 runUserSwap($(this));
                             });
                         } else {
-                            checkGameOver(board);
+                            setTimeout(function() {
+                                checkGameOver(board);
+                            }, 2000); // Add a 2-second delay
                         }
+
                         setTimeout(function() {
                             bestMoveSwap(box, computer, user);
                             moveCount++;
@@ -182,8 +188,10 @@
                 $('.position').append('<p class="communicat">AI moved from (' + bestMove.from.x + ',' + bestMove.from.y + ') to (' + bestMove.to.x + ',' + bestMove.to.y + ')</p>');
             }
 
-            // Call checkGameOver function
-            checkGameOver(board);
+            // Call checkGameOver function with a 2-second delay
+            setTimeout(function() {
+                checkGameOver(board);
+            }, 2000);
         }
 
         function gameEndMessage() {
