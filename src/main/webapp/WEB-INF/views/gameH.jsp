@@ -42,6 +42,15 @@
         <div class="border-dashed view-height">
             <div class="box-wrapper">
                 <div>
+                    <div>
+                        <span style="color: white">Who should start?:</span>
+                        <a href="/app/hard">
+                            <button style="width: 102px" type="button" id="user-start">User</button>
+                        </a>
+                        <a href="/app/hardB">
+                            <button style="width: 102px" type="button" id="computer-start">Computer</button>
+                        </a>
+                    </div>
                     <a href="/app/table">
                         <button style="width: 118px" type="submit">Game's history</button>
                     </a>
@@ -85,6 +94,7 @@
             ['-', '-', '-']
         ];
 
+        //user move in second part of game
         function runUserSwap($user) {
             x = parseInt($user.data('x'));
             y = parseInt($user.data('y'));
@@ -114,12 +124,12 @@
                                 runUserSwap($(this));
                             });
                         } else {
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 checkGameOver(board);
                             }, 2000); // Add a 2-second delay
                         }
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             bestMoveSwap(box, computer, user);
                             moveCount++;
                         }, 2000); // Add a 2-second delay
@@ -145,7 +155,7 @@
             }
         });
 
-
+        //AI move in second part of game
         function bestMoveSwap(board, computer, user) {
             let bestScore = -Infinity;
             let bestMove = {from: {x: -1, y: -1}, to: {x: -1, y: -1}};
@@ -189,7 +199,7 @@
             }
 
             // Call checkGameOver function with a 2-second delay
-            setTimeout(function() {
+            setTimeout(function () {
                 checkGameOver(board);
             }, 2000);
         }
@@ -212,6 +222,7 @@
             return isFull;
         }
 
+
         function checkWin(board, player) {
             for (let i = 0; i < 3; i++) {
                 if (board[i][0] === player && board[i][1] === player && board[i][2] === player) {
@@ -230,6 +241,7 @@
             return false;
         }
 
+        //function check is it end
         function gameOver(board, computer, user) {
             if (checkWin(board, user)) {
                 return user;
@@ -242,6 +254,7 @@
             }
         }
 
+        //function to show info about a winner
         function checkGameOver(board) {
             let result = gameOver(board, computer, user);
             if (result === 'X') {
@@ -253,7 +266,7 @@
             }
         }
 
-
+        //function which help minmax algorithm do the best move
         function scoreValue(board, computer, user) {
             let score = 0;
 
@@ -303,6 +316,7 @@
             return score;
         }
 
+        //MinMax algorithm
         function minMax(isMaximizing, board, computer, user) {
             const result = scoreValue(board, computer, user);
             if (result !== 0) {
@@ -341,6 +355,7 @@
             }
         }
 
+        //AI move in first part of game
         function bestMove(board, computer, user, minMax, isBoardFull, gameOver) {
             let bestScore = -Infinity;
             let row = -1;
@@ -364,11 +379,12 @@
                 className = "box" + row + col;
                 $('.' + className).html(computer);
                 $('.position').append('<p class="communicat">AI clicked :' + row + ',' + col + '</p>');
-            }else {
+            } else {
                 checkGameOver(box);
             }
         }
 
+        //users move
         function runUser($user, callback) {
             x = parseInt($user.data('x'));
             y = parseInt($user.data('y'));
@@ -380,7 +396,7 @@
                 $('.position').append('<p class="communicat">${username} clicked :' + x + ',' + y + '</p>');
 
                 if (!gameOver(box, computer, user)) {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         callback();
                     }, 2000); // Add a 2-second delay
                 } else {
