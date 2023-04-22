@@ -361,7 +361,8 @@
         // }
 
         //New minmax algorithm
-        function minMax(isMaximizing, board, computer, user, depth = 0, maxDepth = 3) {
+        //with alpha-beta
+        function minMax(isMaximizing, board, computer, user, depth = 0, maxDepth = 3, alpha = -Infinity, beta = Infinity) {
             const result = scoreValue(board, computer, user);
             if (result !== 0) {
                 return result;
@@ -376,10 +377,10 @@
                     for (let j = 0; j < board.length; j++) {
                         if (board[i][j] === computer) {
                             let possibleMoves = [
-                                {x: i - 1, y: j}, // up
-                                {x: i + 1, y: j}, // down
-                                {x: i, y: j - 1}, // left
-                                {x: i, y: j + 1}  // right
+                                { x: i - 1, y: j }, // up
+                                { x: i + 1, y: j }, // down
+                                { x: i, y: j - 1 }, // left
+                                { x: i, y: j + 1 }  // right
                             ];
 
                             for (let move of possibleMoves) {
@@ -389,10 +390,16 @@
                                     let temp = board[i][j];
                                     board[i][j] = '-';
                                     board[x][y] = computer;
-                                    let score = minMax(false, board, computer, user, depth + 1, maxDepth);
+                                    let score = minMax(false, board, computer, user, depth + 1, maxDepth, alpha, beta);
                                     board[x][y] = '-';
                                     board[i][j] = temp;
                                     bestScore = Math.max(score, bestScore);
+
+                                    // Alpha-beta pruning for maximizing player
+                                    alpha = Math.max(alpha, bestScore);
+                                    if (beta <= alpha) {
+                                        return bestScore; // Prune the remaining branches
+                                    }
                                 }
                             }
                         }
@@ -405,10 +412,10 @@
                     for (let j = 0; j < board.length; j++) {
                         if (board[i][j] === user) {
                             let possibleMoves = [
-                                {x: i - 1, y: j}, // up
-                                {x: i + 1, y: j}, // down
-                                {x: i, y: j - 1}, // left
-                                {x: i, y: j + 1}  // right
+                                { x: i - 1, y: j }, // up
+                                { x: i + 1, y: j }, // down
+                                { x: i, y: j - 1 }, // left
+                                { x: i, y: j + 1 }  // right
                             ];
 
                             for (let move of possibleMoves) {
@@ -418,10 +425,16 @@
                                     let temp = board[i][j];
                                     board[i][j] = '-';
                                     board[x][y] = user;
-                                    let score = minMax(true, board, computer, user, depth + 1, maxDepth);
+                                    let score = minMax(true, board, computer, user, depth + 1, maxDepth, alpha, beta);
                                     board[x][y] = '-';
                                     board[i][j] = temp;
                                     bestScore = Math.min(score, bestScore);
+
+                                    // Alpha-beta pruning for minimizing player
+                                    beta = Math.min(beta, bestScore);
+                                    if (beta <= alpha) {
+                                        return bestScore; // Prune the remaining branches
+                                    }
                                 }
                             }
                         }
