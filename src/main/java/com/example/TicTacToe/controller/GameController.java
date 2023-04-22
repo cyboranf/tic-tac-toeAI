@@ -50,4 +50,10 @@ public class GameController {
 
         return "gameHB";
     }
+
+    @GetMapping("/app/table")
+    public String showTable(Model model) {
+        model.addAttribute("list", userService.findAll());
+        return "table";
+    }
 }
