@@ -1,5 +1,5 @@
 # Tic-Tac-ToeAI
-It's a game similar to original Tic-tac-toe (more details at ReadME). Project for AI subject on study where I must create a game where User can play vs MiniMax algorithm with alfa-beta upgrade.
+It's a game similar to original Tic-tac-toe (more details at first video). Project for AI subject on study where I must create a game where User can play vs MiniMax algorithm with alfa-beta upgrade.
 
 ## Pseudocode to be based on:
 
