@@ -316,13 +316,57 @@
             return score;
         }
 
-        //MinMax algorithm
-        function minMax(isMaximizing, board, computer, user) {
+        //First version of minMax algorithm
+        //The issue stems from the fact that the minMax function is designed
+        // to work with the first part of the game and not the second part, where swapping is allowed.
+
+        // function minMax(isMaximizing, board, computer, user) {
+        //     let winner = checkWin(board, computer) ? computer : checkWin(board, user) ? user : null;
+        //
+        //     if (winner !== null) {
+        //         return winner === computer ? 10 : -10;
+        //     }
+        //
+        //     if (isBoardFull(board)) {
+        //         return 0;
+        //     }
+        //
+        //     if (isMaximizing) {
+        //         let bestScore = -Infinity;
+        //         for (let i = 0; i < board.length; i++) {
+        //             for (let j = 0; j < board.length; j++) {
+        //                 if (board[i][j] === '-') {
+        //                     board[i][j] = computer;
+        //                     let score = minMax(false, board, computer, user);
+        //                     bestScore = Math.max(score, bestScore);
+        //                     board[i][j] = '-';
+        //                 }
+        //             }
+        //         }
+        //         return bestScore;
+        //     } else {
+        //         let bestScore = Infinity;
+        //         for (let i = 0; i < board.length; i++) {
+        //             for (let j = 0; j < board.length; j++) {
+        //                 if (board[i][j] === '-') {
+        //                     board[i][j] = user;
+        //                     let score = minMax(true, board, computer, user);
+        //                     bestScore = Math.min(score, bestScore);
+        //                     board[i][j] = '-';
+        //                 }
+        //             }
+        //         }
+        //         return bestScore;
+        //     }
+        // }
+
+        //New minmax algorithm
+        function minMax(isMaximizing, board, computer, user, depth = 0, maxDepth = 3) {
             const result = scoreValue(board, computer, user);
             if (result !== 0) {
                 return result;
             }
-            if (isBoardFull(board)) {
+            if (isBoardFull(board) || depth === maxDepth) {
                 return 0;
             }
 
@@ -330,11 +374,27 @@
                 let bestScore = -Infinity;
                 for (let i = 0; i < board.length; i++) {
                     for (let j = 0; j < board.length; j++) {
-                        if (board[i][j] === '-') {
-                            board[i][j] = computer;
-                            let score = minMax(false, board, computer, user);
-                            bestScore = Math.max(score, bestScore);
-                            board[i][j] = '-';
+                        if (board[i][j] === computer) {
+                            let possibleMoves = [
+                                {x: i - 1, y: j}, // up
+                                {x: i + 1, y: j}, // down
+                                {x: i, y: j - 1}, // left
+                                {x: i, y: j + 1}  // right
+                            ];
+
+                            for (let move of possibleMoves) {
+                                let x = move.x;
+                                let y = move.y;
+                                if (x >= 0 && x < board.length && y >= 0 && y < board.length && board[x][y] === '-') {
+                                    let temp = board[i][j];
+                                    board[i][j] = '-';
+                                    board[x][y] = computer;
+                                    let score = minMax(false, board, computer, user, depth + 1, maxDepth);
+                                    board[x][y] = '-';
+                                    board[i][j] = temp;
+                                    bestScore = Math.max(score, bestScore);
+                                }
+                            }
                         }
                     }
                 }
@@ -343,11 +403,27 @@
                 let bestScore = Infinity;
                 for (let i = 0; i < board.length; i++) {
                     for (let j = 0; j < board.length; j++) {
-                        if (board[i][j] === '-') {
-                            board[i][j] = user;
-                            let score = minMax(true, board, computer, user);
-                            bestScore = Math.min(score, bestScore);
-                            board[i][j] = '-';
+                        if (board[i][j] === user) {
+                            let possibleMoves = [
+                                {x: i - 1, y: j}, // up
+                                {x: i + 1, y: j}, // down
+                                {x: i, y: j - 1}, // left
+                                {x: i, y: j + 1}  // right
+                            ];
+
+                            for (let move of possibleMoves) {
+                                let x = move.x;
+                                let y = move.y;
+                                if (x >= 0 && x < board.length && y >= 0 && y < board.length && board[x][y] === '-') {
+                                    let temp = board[i][j];
+                                    board[i][j] = '-';
+                                    board[x][y] = user;
+                                    let score = minMax(true, board, computer, user, depth + 1, maxDepth);
+                                    board[x][y] = '-';
+                                    board[i][j] = temp;
+                                    bestScore = Math.min(score, bestScore);
+                                }
+                            }
                         }
                     }
                 }
@@ -356,31 +432,34 @@
         }
 
         //AI move in first part of game
-        function bestMove(board, computer, user, minMax, isBoardFull, gameOver) {
+        function bestMove(board, computer, user) {
             let bestScore = -Infinity;
-            let row = -1;
-            let col = -1;
+            let move;
+
             for (let i = 0; i < board.length; i++) {
                 for (let j = 0; j < board.length; j++) {
                     if (board[i][j] === '-') {
                         board[i][j] = computer;
-                        let score = minMax;
+                        // Increase the depth of the minMax algorithm to improve the AI performance
+                        let score = minMax(false, board, computer, user, 1, 3);
                         board[i][j] = '-';
                         if (score > bestScore) {
                             bestScore = score;
-                            row = i;
-                            col = j;
+                            move = { i, j };
                         }
                     }
                 }
             }
-            if (!isBoardFull && !gameOver) {
-                board[row][col] = computer;
-                className = "box" + row + col;
-                $('.' + className).html(computer);
-                $('.position').append('<p class="communicat">AI clicked :' + row + ',' + col + '</p>');
-            } else {
-                checkGameOver(box);
+
+            board[move.i][move.j] = computer;
+            let className = "box" + move.i + move.j;
+            $('.' + className).html(computer);
+            $('.position').append('<p class="communicat">AI clicked :' + move.i + ',' + move.j + '</p>');
+
+            if (gameOver(board, computer, user)) {
+                setTimeout(function () {
+                    checkGameOver(board);
+                }, 2000); // Add a 2-second delay
             }
         }
 
