@@ -11,11 +11,12 @@ It's a game similar to original Tic-tac-toe (more details at ReadME). Project fo
 
 ## The version where the user starts:
 
-[userStarts.webm](https://user-images.githubusercontent.com/99881266/232581802-f30a4697-6a31-4c4a-bda5-af12bbc302f0.webm)
+[userStarts.webm](https://user-images.githubusercontent.com/99881266/233804647-3dee53e5-30c6-4d6d-8b72-eb3643f8e760.webm)
 
 ## The version where the AI starts:
 
-[aiStarts.webm](https://user-images.githubusercontent.com/99881266/232581860-f844bf7d-e218-45b4-ad4c-1c0a06a18a14.webm)
+[aiStarts.webm](https://user-images.githubusercontent.com/99881266/233804654-a440e24e-847f-4dd7-9b46-8065978bfd50.webm)
+
 
 
 
