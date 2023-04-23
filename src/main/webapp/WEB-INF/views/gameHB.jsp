@@ -470,27 +470,42 @@
             x.volume = e.currentTarget.value / 100;
         })
 
+        const userId = ${userId};
+
+        function updateUserScoreAndQuantityOfGames(result) {
+            $.ajax({
+                type: "POST",
+                url: "/app/updateScore",
+                data: { userId: userId, result: result },
+                success: function (response) {
+                    console.log("Updated score:", response.updatedScore);
+                    console.log("Updated quantity of games:", response.updatedQuantityOfGames);
+                    window.location.href = "/app/hard";
+                }
+            });
+        }
+
         function nobodyWon() {
             if (confirm("Nobody won") == true) {
-                window.location.href = "/app/hardB";
+                updateUserScoreAndQuantityOfGames("nobodyWon");
             } else {
-                window.location.href = "/app/hardB";
+                updateUserScoreAndQuantityOfGames("nobodyWon");
             }
         }
 
         function computerWon() {
             if (confirm("Computer won") == true) {
-                window.location.href = "/app/hardB";
+                updateUserScoreAndQuantityOfGames("computerWon");
             } else {
-                window.location.href = "/app/hardB";
+                updateUserScoreAndQuantityOfGames("computerWon");
             }
         }
 
         function userWon() {
             if (confirm("User won") == true) {
-                window.location.href = "/app/hardB";
+                updateUserScoreAndQuantityOfGames("userWon");
             } else {
-                window.location.href = "/app/hardB";
+                updateUserScoreAndQuantityOfGames("userWon");
             }
         }
     });
