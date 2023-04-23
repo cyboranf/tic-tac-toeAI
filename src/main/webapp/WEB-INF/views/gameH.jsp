@@ -377,10 +377,10 @@
                     for (let j = 0; j < board.length; j++) {
                         if (board[i][j] === computer) {
                             let possibleMoves = [
-                                { x: i - 1, y: j }, // up
-                                { x: i + 1, y: j }, // down
-                                { x: i, y: j - 1 }, // left
-                                { x: i, y: j + 1 }  // right
+                                {x: i - 1, y: j}, // up
+                                {x: i + 1, y: j}, // down
+                                {x: i, y: j - 1}, // left
+                                {x: i, y: j + 1}  // right
                             ];
 
                             for (let move of possibleMoves) {
@@ -412,10 +412,10 @@
                     for (let j = 0; j < board.length; j++) {
                         if (board[i][j] === user) {
                             let possibleMoves = [
-                                { x: i - 1, y: j }, // up
-                                { x: i + 1, y: j }, // down
-                                { x: i, y: j - 1 }, // left
-                                { x: i, y: j + 1 }  // right
+                                {x: i - 1, y: j}, // up
+                                {x: i + 1, y: j}, // down
+                                {x: i, y: j - 1}, // left
+                                {x: i, y: j + 1}  // right
                             ];
 
                             for (let move of possibleMoves) {
@@ -458,7 +458,7 @@
                         board[i][j] = '-';
                         if (score > bestScore) {
                             bestScore = score;
-                            move = { i, j };
+                            move = {i, j};
                         }
                     }
                 }
@@ -506,27 +506,43 @@
             x.volume = e.currentTarget.value / 100;
         })
 
+
+        const userId = ${userId};
+
+        function updateUserScoreAndQuantityOfGames(result) {
+            $.ajax({
+                type: "POST",
+                url: "/app/updateScore",
+                data: { userId: userId, result: result },
+                success: function (response) {
+                    console.log("Updated score:", response.updatedScore);
+                    console.log("Updated quantity of games:", response.updatedQuantityOfGames);
+                    window.location.href = "/app/hard";
+                }
+            });
+        }
+
         function nobodyWon() {
             if (confirm("Nobody won") == true) {
-                window.location.href = "/app/hard";
+                updateUserScoreAndQuantityOfGames("nobodyWon");
             } else {
-                window.location.href = "/app/hard";
+                updateUserScoreAndQuantityOfGames("nobodyWon");
             }
         }
 
         function computerWon() {
             if (confirm("Computer won") == true) {
-                window.location.href = "/app/hard";
+                updateUserScoreAndQuantityOfGames("computerWon");
             } else {
-                window.location.href = "/app/hard";
+                updateUserScoreAndQuantityOfGames("computerWon");
             }
         }
 
         function userWon() {
             if (confirm("User won") == true) {
-                window.location.href = "/app/hard";
+                updateUserScoreAndQuantityOfGames("userWon");
             } else {
-                window.location.href = "/app/hard";
+                updateUserScoreAndQuantityOfGames("userWon");
             }
         }
     });

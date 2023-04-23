@@ -32,6 +32,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User findById(Long id) {
+        return userRepository.findById(id).get();
+    }
+
     public User findByEmail(String email) {
         return userRepository.findFirstByEmail(email);
     }
@@ -70,5 +74,17 @@ public class UserService {
         });
 
         return quantity.get();
+    }
+
+    public void updateUserScore(Long userId, int newScore) {
+        User user = userRepository.findById(userId).orElseThrow(/* Handle user not found */);
+        user.setScore(newScore);
+        userRepository.save(user);
+    }
+
+    public void incrementQuantityOfGames(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(/* Handle user not found */);
+        user.setQuantityOfGames(user.getQuantityOfGames() + 1);
+        userRepository.save(user);
     }
 }

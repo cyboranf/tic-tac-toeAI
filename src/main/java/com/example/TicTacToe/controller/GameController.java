@@ -2,9 +2,17 @@ package com.example.TicTacToe.controller;
 
 import com.example.TicTacToe.domain.User;
 import com.example.TicTacToe.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class GameController {
@@ -44,11 +52,11 @@ public class GameController {
         usersScore = userService.scoresOfAllUsers();
         aiScore = (quantityOfAllGames * 3) - usersScore;
 
+        model.addAttribute("userId", loggedUser.getId());
         model.addAttribute("username", loggedUser.getUserName());
         model.addAttribute("loggedUserScore", loggedUserScore);
         model.addAttribute("quantityOfAllGames", quantityOfAllGames);
         model.addAttribute("aiScore", aiScore);
-
 
         return "gameH";
     }
@@ -68,8 +76,32 @@ public class GameController {
     @GetMapping("/app/table")
     public String showTable(Model model) {
         model.addAttribute("list", userService.findAll());
+
+        quantityOfAllGames = userService.quantityOfAllGames();
+        usersScore = userService.scoresOfAllUsers();
+        aiScore = (quantityOfAllGames * 3) - usersScore;
+
+        model.addAttribute("quantityOfAllGames", quantityOfAllGames);
         model.addAttribute("aiScore", aiScore);
 
         return "table";
+    }
+
+    @PostMapping("/app/updateScore")
+    public ResponseEntity<?> updateScore(@RequestParam("userId") Long userId, @RequestParam("result") String result) {
+        userService.incrementQuantityOfGames(userId);
+
+        if (result.equals("userWon")) {
+            User user = userService.findById(userId);
+            int newScore = user.getScore() + 3;
+            userService.updateUserScore(userId, newScore);
+        }
+
+        User updatedUser = userService.findById(userId);
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("updatedScore", updatedUser.getScore());
+        responseData.put("updatedQuantityOfGames", updatedUser.getQuantityOfGames());
+
+        return ResponseEntity.ok(responseData);
     }
 }
