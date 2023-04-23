@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Transactional
@@ -45,5 +46,29 @@ public class UserService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public int scoresOfAllUsers() {
+        List<User> users = userRepository.findAll();
+
+        AtomicInteger score = new AtomicInteger();
+
+        users.forEach(u -> {
+            score.addAndGet(u.getScore());
+        });
+
+        return score.get();
+    }
+
+    public int quantityOfAllGames() {
+        List<User> users = userRepository.findAll();
+
+        AtomicInteger quantity = new AtomicInteger();
+
+        users.forEach(u -> {
+            quantity.addAndGet(u.getQuantityOfGames());
+        });
+
+        return quantity.get();
     }
 }

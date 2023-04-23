@@ -1,10 +1,7 @@
 package com.example.TicTacToe.controller;
 
-import com.example.TicTacToe.algorithm.classes.BotSkill;
-import com.example.TicTacToe.domain.LoggedUser;
 import com.example.TicTacToe.domain.User;
 import com.example.TicTacToe.service.UserService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class GameController {
     private final UserService userService;
-    private final BotSkill botSkill;
 
-    public GameController(UserService userService, BotSkill botSkill) {
+    public GameController(UserService userService) {
         this.userService = userService;
-        this.botSkill = botSkill;
     }
+
+    public int quantityOfAllGames = 0;
+    public int loggedUserScore;
+    public int usersScore;
+    public int aiScore;
 
     @GetMapping("/app/game")
     public String showGame(Model model) {
@@ -37,16 +37,30 @@ public class GameController {
 
     @GetMapping("/app/hard")
     public String showGameHardLevel(Model model) {
-        User user = userService.findByLogged();
-        model.addAttribute("username", user.getUserName());
+        User loggedUser = userService.findByLogged();
+
+        loggedUserScore = loggedUser.getScore();
+        quantityOfAllGames = userService.quantityOfAllGames();
+        usersScore = userService.scoresOfAllUsers();
+        aiScore = (quantityOfAllGames * 3) - usersScore;
+
+        model.addAttribute("username", loggedUser.getUserName());
+        model.addAttribute("loggedUserScore", loggedUserScore);
+        model.addAttribute("quantityOfAllGames", quantityOfAllGames);
+        model.addAttribute("aiScore", aiScore);
+
 
         return "gameH";
     }
 
     @GetMapping("/app/hardB")
     public String showGameHardLevel2(Model model) {
-        User user = userService.findByLogged();
-        model.addAttribute("username", user.getUserName());
+        User loggedUser = userService.findByLogged();
+
+        model.addAttribute("username", loggedUser.getUserName());
+        model.addAttribute("loggedUserScore", loggedUserScore);
+        model.addAttribute("quantityOfAllGames", quantityOfAllGames);
+        model.addAttribute("aiScore", aiScore);
 
         return "gameHB";
     }
@@ -54,6 +68,8 @@ public class GameController {
     @GetMapping("/app/table")
     public String showTable(Model model) {
         model.addAttribute("list", userService.findAll());
+        model.addAttribute("aiScore", aiScore);
+
         return "table";
     }
 }
