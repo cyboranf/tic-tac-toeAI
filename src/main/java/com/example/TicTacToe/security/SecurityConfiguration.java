@@ -2,6 +2,7 @@ package com.example.TicTacToe.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,6 +31,7 @@ public class SecurityConfiguration {
                 .antMatchers("/app/hard").permitAll()
                 .antMatchers("/app/hardB").permitAll()
                 .antMatchers("/app/table").permitAll()
+                .antMatchers(HttpMethod.POST, "/app/updateScore").permitAll()
                 .anyRequest().denyAll()
                 .and().formLogin()
                 .loginPage("/login")
