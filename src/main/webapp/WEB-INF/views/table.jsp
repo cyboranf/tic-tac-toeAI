@@ -65,7 +65,7 @@
             <td>${item.userName}</td>
             <td>${item.score}</td>
             <c:if test="${item == list[0]}">
-                <td rowspan="${fn:length(list)}">${aiPoints}</td>
+                <td rowspan="${fn:length(list)}">${aiScore}</td>
             </c:if>
         </tr>
     </c:forEach>
