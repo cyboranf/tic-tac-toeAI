@@ -40,6 +40,11 @@
 <section class="dashboard-section">
     <div class="container pt-4 pb-4">
         <div class="border-dashed view-height">
+            <div style="text-align: right; padding-bottom: 20px;">
+                <a href="/app/logout">
+                    <button type="button">Log out</button>
+                </a>
+            </div>
             <div class="box-wrapper">
                 <div>
                     <div>

@@ -64,4 +64,11 @@ public class RegisterController {
         userService.save(userToLog);
         return "redirect:/app/game";
     }
+    @GetMapping("/app/logout")
+    public String logout(@AuthenticationPrincipal LoggedUser loggedUser) {
+        User user = loggedUser.getUser();
+        user.setLogged(false);
+        userService.save(user);
+        return "redirect:/";
+    }
 }

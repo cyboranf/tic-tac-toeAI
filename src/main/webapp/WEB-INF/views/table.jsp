@@ -24,6 +24,11 @@
     </style>
 </head>
 <body>
+<div style="text-align: right; padding-bottom: 20px;">
+    <a href="/app/logout">
+        <button type="button">Log out</button>
+    </a>
+</div>
 
 <button class="btn btn-primary" onclick="playAudio(this)" type="button">Play Music</button>
 <input type="range" id="volume-slider">
