@@ -65,6 +65,12 @@ public class GameController {
     public String showGameHardLevel2(Model model) {
         User loggedUser = userService.findByLogged();
 
+        loggedUserScore = loggedUser.getScore();
+        quantityOfAllGames = userService.quantityOfAllGames();
+        usersScore = userService.scoresOfAllUsers();
+        aiScore = (quantityOfAllGames * 3) - usersScore;
+
+        model.addAttribute("userId", loggedUser.getId());
         model.addAttribute("username", loggedUser.getUserName());
         model.addAttribute("loggedUserScore", loggedUserScore);
         model.addAttribute("quantityOfAllGames", quantityOfAllGames);
